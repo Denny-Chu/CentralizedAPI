@@ -19,7 +19,8 @@ class PlayerController extends Controller
         $params['hash']  = $hash;
 
         $response = Http::withHeaders($header)->post(env(strtoupper($game) . '_API_URL') . "/$platform/players", $params);
-        
+
+        return $response;
     }
 
     public function playerStatus(Request $request)

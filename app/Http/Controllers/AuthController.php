@@ -36,7 +36,7 @@ class AuthController extends Controller
         $hash = hash("SHA256", http_build_query($params));
         $params['hash']  = $hash;
 
-        $response = Http::withHeaders($header)->post(env(strtoupper($game) . '_API_URL') . "/$platform/login", $params);
+        $response = Http::withHeaders($header)->get(env(strtoupper($game) . '_API_URL') . "/$platform/login", $params);
 
         return $response;
 
