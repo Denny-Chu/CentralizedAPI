@@ -26,7 +26,13 @@ $router->group(['prefix' => 'transaction'], function () use ($router) {
 });
 
 $router->group(['prefix' => 'game'], function () use ($router) {
-    $router->get('/history', 'TransactionController@getTransactionHistory');
-    $router->get('/detail', 'GameController@getDetail');
+    $router->get('/history', 'GameController@getTransactionHistory');
+    $router->get('/detail', 'GameController@getOrderDetail');
     $router->get('/detailUrl', 'GameController@getDetailUrl');
+});
+
+
+$router->group(['prefix' => 'sw'], function () use ($router) {
+    $router->get('/query', 'singleWalletController@queryOrder');
+    $router->get('/resend', 'singleWalletController@resendOrder');
 });

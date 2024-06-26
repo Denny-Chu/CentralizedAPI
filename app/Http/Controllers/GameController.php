@@ -29,10 +29,10 @@ class GameController extends Controller
 
         $response = Http::withHeaders($header)->get(env(strtoupper($game) . '_API_URL') . "/$platform/history/transaction", $params);
 
-        return $response;
+        return response()->json($response->json());
     }
 
-    public function getDetail(Request $request)
+    public function getOrderDetail(Request $request)
     {
         $params = $request->all();
         $header['authorization'] = $request->header('authorization');
@@ -43,9 +43,9 @@ class GameController extends Controller
         $hash = hash("SHA256", http_build_query($params));
         $params['hash']  = $hash;
 
-        $response = Http::withHeaders($header)->get(env(strtoupper($game) . '_API_URL') . "/$platform/history/detail", $params);
+        $response = Http::withHeaders($header)->get(env(strtoupper($game) . '_API_URL') . "/$platform/history/detail/order", $params);
 
-        return $response;
+        return response()->json($response->json());
     }
 
     public function getDetailUrl(Request $request)
@@ -61,6 +61,6 @@ class GameController extends Controller
 
         $response = Http::withHeaders($header)->get(env(strtoupper($game) . '_API_URL') . "/$platform/history/detail/url", $params);
 
-        return $response;
+        return response()->json($response->json());
     }
 }

@@ -25,12 +25,11 @@ class TransactionController extends Controller
         $game = $params['game'];
         $platform = $params['platform'];
 
-        $hash = hash("SHA256", http_build_query($params));
-        $params['hash']  = $hash;
+        $hash = hash("SHA256", json_encode($params));
 
-        $response = Http::withHeaders($header)->post(env(strtoupper($game) . '_API_URL') . "/$platform/transfer", $params);
+        $response = Http::withHeaders($header)->post(env(strtoupper($game) . '_API_URL') . "/$platform/transfer?hash=$hash", $params);
 
-        return $response;
+        return response()->json($response->json());
     }
 
     public function getTransferHistory(Request $request)
@@ -46,6 +45,6 @@ class TransactionController extends Controller
 
         $response = Http::withHeaders($header)->get(env(strtoupper($game) . '_API_URL') . "/$platform/history/transfer", $params);
 
-        return $response;
+        return response()->json($response->json());
     }
 }

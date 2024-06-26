@@ -21,7 +21,7 @@ class AuthController extends Controller
 
         $response = Http::withHeaders($header)->get(env(strtoupper($game) . '_API_URL') . "/$platform/demo/login", $params);
 
-        return $response;
+        return response()->json($response->json());
     }
 
 
@@ -38,7 +38,7 @@ class AuthController extends Controller
 
         $response = Http::withHeaders($header)->get(env(strtoupper($game) . '_API_URL') . "/$platform/login", $params);
 
-        return $response;
+        return response()->json($response->json());
 
     }
 
@@ -50,12 +50,11 @@ class AuthController extends Controller
         $game = $params['game'];
         $platform = $params['platform'];
 
-        $hash = hash("SHA256", http_build_query($params));
-        $params['hash']  = $hash;
+        $hash = hash("SHA256", json_encode($params));
 
-        $response = Http::withHeaders($header)->post(env(strtoupper($game) . '_API_URL') . "/$platform/logout", $params);
+        $response = Http::withHeaders($header)->post(env(strtoupper($game) . '_API_URL') . "/$platform/logout?hash=$hash", $params);
 
-        return $response;
+        return response()->json($response->json());
     }
 
     public function logoutAll(Request $request)
@@ -66,11 +65,10 @@ class AuthController extends Controller
         $game = $params['game'];
         $platform = $params['platform'];
 
-        $hash = hash("SHA256", http_build_query($params));
-        $params['hash']  = $hash;
+        $hash = hash("SHA256", json_encode($params));
 
-        $response = Http::withHeaders($header)->post(env(strtoupper($game) . '_API_URL') . "/$platform/logout/all", $params);
+        $response = Http::withHeaders($header)->post(env(strtoupper($game) . '_API_URL') . "/$platform/logout/all?hash=$hash", $params);
 
-        return $response;
+        return response()->json($response->json());
     }
 }

@@ -15,12 +15,11 @@ class AgentController extends Controller
         $game = $params['game'];
         $platform = $params['platform'];
 
-        $hash = hash("SHA256", http_build_query($params));
-        $params['hash']  = $hash;
+        $hash = hash("SHA256", json_encode($params));
 
-        $response = Http::withHeaders($header)->post(env(strtoupper($game) . '_API_URL') . "/$platform/agents", $params);
+        $response = Http::withHeaders($header)->post(env(strtoupper($game) . '_API_URL') . "/$platform/agents?hash=$hash", $params);
 
-        return $response;
+        return response()->json($response->json());
         
     }
 
@@ -37,7 +36,7 @@ class AgentController extends Controller
 
         $response = Http::withHeaders($header)->get(env(strtoupper($game) . '_API_URL') . "/$platform/agents", $params);
 
-        return $response;
+        return response()->json($response->json());
         
     }
 }

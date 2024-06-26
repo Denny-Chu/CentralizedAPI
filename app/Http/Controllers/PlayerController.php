@@ -15,12 +15,11 @@ class PlayerController extends Controller
         $game = $params['game'];
         $platform = $params['platform'];
 
-        $hash = hash("SHA256", http_build_query($params));
-        $params['hash']  = $hash;
+        $hash = hash("SHA256", json_encode($params));
 
-        $response = Http::withHeaders($header)->post(env(strtoupper($game) . '_API_URL') . "/$platform/players", $params);
+        $response = Http::withHeaders($header)->post(env(strtoupper($game) . '_API_URL') . "/$platform/players?hash=$hash", $params);
 
-        return $response;
+        return response()->json($response->json());
     }
 
     public function playerStatus(Request $request)
@@ -36,7 +35,7 @@ class PlayerController extends Controller
 
         $response = Http::withHeaders($header)->get(env(strtoupper($game) . '_API_URL') . "/$platform/players/status", $params);
 
-        return $response;
+        return response()->json($response->json());
         
     }
 
@@ -53,7 +52,7 @@ class PlayerController extends Controller
 
         $response = Http::withHeaders($header)->get(env(strtoupper($game) . '_API_URL') . "/$platform/players/online", $params);
 
-        return $response;
+        return response()->json($response->json());
         
     }
 }
