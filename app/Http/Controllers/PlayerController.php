@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use App\Http\Services\CommonService;
 
 class PlayerController extends Controller
 {
@@ -11,13 +11,9 @@ class PlayerController extends Controller
     {
         $params = $request->all();
         $header['authorization'] = $request->header('authorization');
-
-        $game = $params['game'];
-        $platform = $params['platform'];
-
-        $hash = hash("SHA256", json_encode($params));
-
-        $response = Http::withHeaders($header)->post(env(strtoupper($game) . '_API_URL') . "/$platform/players?hash=$hash", $params);
+        // $hash = hash("SHA256", json_encode($params));
+        // $response = CommonService::getUrlResponse($header, $params, "players?hash=$hash", "post");
+        $response = CommonService::getUrlResponse($header, $params, "players", "post");
 
         return response()->json($response->json());
     }
@@ -26,33 +22,17 @@ class PlayerController extends Controller
     {
         $params = $request->all();
         $header['authorization'] = $request->header('authorization');
-
-        $game = $params['game'];
-        $platform = $params['platform'];
-
-        $hash = hash("SHA256", http_build_query($params));
-        $params['hash']  = $hash;
-
-        $response = Http::withHeaders($header)->get(env(strtoupper($game) . '_API_URL') . "/$platform/players/status", $params);
+        $response = CommonService::getUrlResponse($header, $params, "players/status", "get");
 
         return response()->json($response->json());
-        
     }
 
     public function onlinePlayersList(Request $request)
     {
         $params = $request->all();
         $header['authorization'] = $request->header('authorization');
-
-        $game = $params['game'];
-        $platform = $params['platform'];
-
-        $hash = hash("SHA256", http_build_query($params));
-        $params['hash']  = $hash;
-
-        $response = Http::withHeaders($header)->get(env(strtoupper($game) . '_API_URL') . "/$platform/players/online", $params);
+        $response = CommonService::getUrlResponse($header, $params, "players/online", "get");
 
         return response()->json($response->json());
-        
     }
 }
