@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Services\CommonService;
+use Illuminate\Support\Facades\Http;
+
 
 class PlayerController extends Controller
 {
@@ -11,9 +13,15 @@ class PlayerController extends Controller
     {
         $params = $request->all();
         $header['authorization'] = $request->header('authorization');
-        // $hash = hash("SHA256", json_encode($params));
-        // $response = CommonService::getUrlResponse($header, $params, "players?hash=$hash", "post");
-        $response = CommonService::getUrlResponse($header, $params, "players", "post");
+        // --------------------
+        $game = $params['game'];
+        if ($game === 'LOTTO') {
+            $response = CommonService::getUrlResponse($header, $params, "players", "post");
+        } else {
+            $platform = $params['platform'];
+            $hash = hash("SHA256", json_encode($params));
+            $response = Http::withHeaders($header)->post(env(strtoupper($game) . '_API_URL') . "/$platform/players?hash=$hash", $params);
+        }
 
         return response()->json($response->json());
     }

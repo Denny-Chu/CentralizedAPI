@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Services\CommonService;
+use Illuminate\Support\Facades\Http;
 
 class AuthController extends Controller
 {
@@ -30,10 +31,15 @@ class AuthController extends Controller
     {
         $params = $request->all();
         $header['authorization'] = $request->header('authorization');
-        $hash = hash("SHA256", json_encode($params));
+        $game = $params['game'];
 
-        $response = CommonService::getUrlResponse($header, $params, "logout", "post");
-
+        if ($game === "LOTTO") {
+            $response = CommonService::getUrlResponse($header, $params, "logout", "post");
+        } else {
+            $platform = $params['platform'];
+            $hash = hash("SHA256", json_encode($params));
+            $response = Http::withHeaders($header)->post(env(strtoupper($game) . '_API_URL') . "/$platform/logout?hash=$hash", $params);
+        }
 
         return response()->json($response->json());
     }
@@ -42,10 +48,14 @@ class AuthController extends Controller
     {
         $params = $request->all();
         $header['authorization'] = $request->header('authorization');
-        $hash = hash("SHA256", json_encode($params));
-
-        $response = CommonService::getUrlResponse($header, $params, "logout/all", "post");
-
+        $game = $params['game'];
+        if ($game === "LOTTO") {
+            $response = CommonService::getUrlResponse($header, $params, "logout/all", "post");
+        } else {
+            $platform = $params['platform'];
+            $hash = hash("SHA256", json_encode($params));
+            $response = Http::withHeaders($header)->post(env(strtoupper($game) . '_API_URL') . "/$platform/logout/all?hash=$hash", $params);
+        }
 
         return response()->json($response->json());
     }

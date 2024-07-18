@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Services\CommonService;
+use Illuminate\Support\Facades\Http;
 
 class AgentController extends Controller
 {
@@ -11,7 +12,15 @@ class AgentController extends Controller
     {
         $params = $request->all();
         $header['authorization'] = $request->header('authorization');
-        $response = CommonService::getUrlResponse($header, $params, "agents", "post");
+        // ---
+        $game = $params['game'];
+        if ($game === "LOTTO") {
+            $response = CommonService::getUrlResponse($header, $params, "agents", "post");
+        } else {
+            $platform = $params['platform'];
+            $hash = hash("SHA256", json_encode($params));
+            $response = Http::withHeaders($header)->post(env(strtoupper($game) . '_API_URL') . "/$platform/agents?hash=$hash", $params);
+        }
 
         return response()->json($response->json());
     }
