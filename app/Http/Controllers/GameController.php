@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use App\Http\Services\CommonService;
 
 class GameController extends Controller
 {
@@ -20,14 +20,7 @@ class GameController extends Controller
     {
         $params = $request->all();
         $header['authorization'] = $request->header('authorization');
-
-        $game = $params['game'];
-        $platform = $params['platform'];
-
-        $hash = hash("SHA256", http_build_query($params));
-        $params['hash']  = $hash;
-
-        $response = Http::withHeaders($header)->get(env(strtoupper($game) . '_API_URL') . "/$platform/history/transaction", $params);
+        $response = CommonService::getUrlResponse($header, $params, "history/transaction", "get");
 
         return response()->json($response->json());
     }
@@ -36,14 +29,8 @@ class GameController extends Controller
     {
         $params = $request->all();
         $header['authorization'] = $request->header('authorization');
+        $response = CommonService::getUrlResponse($header, $params, "history/detail/order", "get");
 
-        $game = $params['game'];
-        $platform = $params['platform'];
-
-        $hash = hash("SHA256", http_build_query($params));
-        $params['hash']  = $hash;
-
-        $response = Http::withHeaders($header)->get(env(strtoupper($game) . '_API_URL') . "/$platform/history/detail/order", $params);
 
         return response()->json($response->json());
     }
@@ -52,14 +39,7 @@ class GameController extends Controller
     {
         $params = $request->all();
         $header['authorization'] = $request->header('authorization');
-
-        $game = $params['game'];
-        $platform = $params['platform'];
-
-        $hash = hash("SHA256", http_build_query($params));
-        $params['hash']  = $hash;
-
-        $response = Http::withHeaders($header)->get(env(strtoupper($game) . '_API_URL') . "/$platform/history/detail/url", $params);
+        $response = CommonService::getUrlResponse($header, $params, "history/detail/url", "get");
 
         return response()->json($response->json());
     }

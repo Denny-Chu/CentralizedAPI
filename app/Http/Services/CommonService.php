@@ -3,6 +3,9 @@
 namespace App\Http\Services;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+// Service
+use App\Http\Services\LottoService;
 
 class CommonService extends Service
 {
@@ -16,5 +19,29 @@ class CommonService extends Service
         $params['hash']  = $hash;
 
         return $params;
+    }
+
+    /**
+     * 轉接api後取得回應
+     */
+    public static function getUrlResponse($header, $params, $route, $method)
+    {
+        $game = $params['game'];
+        $platform = $params['platform'];
+
+        switch ($game) {
+            case "LOTTO":
+                $route = LottoService::getLottoRoute($route); //轉換一下
+                $params['hash'] = LottoService::getLottoHash($params);
+                $response = Http::withHeaders($header)->$method(env(strtoupper($game) . '_API_URL') . "/$route", $params);
+                break;
+            default:
+                $hash = hash("SHA256", http_build_query($params));
+                $params['hash']  = $hash;
+                $response = Http::withHeaders($header)->$method(env(strtoupper($game) . '_API_URL') . "/$platform/$route", $params);
+                break;
+        }
+
+        return $response;
     }
 }

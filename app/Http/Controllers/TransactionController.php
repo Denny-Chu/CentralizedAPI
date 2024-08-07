@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Services\CommonService;
 use Illuminate\Support\Facades\Http;
 
 class TransactionController extends Controller
@@ -21,13 +22,15 @@ class TransactionController extends Controller
     {
         $params = $request->all();
         $header['authorization'] = $request->header('authorization');
-
         $game = $params['game'];
-        $platform = $params['platform'];
 
-        $hash = hash("SHA256", json_encode($params));
-
-        $response = Http::withHeaders($header)->post(env(strtoupper($game) . '_API_URL') . "/$platform/transfer?hash=$hash", $params);
+        if ($game === "LOTTO") {
+            $response = CommonService::getUrlResponse($header, $params, "transfer", "post");
+        } else {
+            $platform = $params['platform'];
+            $hash = hash("SHA256", json_encode($params));
+            $response = Http::withHeaders($header)->post(env(strtoupper($game) . '_API_URL') . "/$platform/transfer?hash=$hash", $params);
+        }
 
         return response()->json($response->json());
     }
@@ -36,14 +39,7 @@ class TransactionController extends Controller
     {
         $params = $request->all();
         $header['authorization'] = $request->header('authorization');
-
-        $game = $params['game'];
-        $platform = $params['platform'];
-
-        $hash = hash("SHA256", http_build_query($params));
-        $params['hash']  = $hash;
-
-        $response = Http::withHeaders($header)->get(env(strtoupper($game) . '_API_URL') . "/$platform/history/transfer", $params);
+        $response = CommonService::getUrlResponse($header, $params, "history/transfer", "get");
 
         return response()->json($response->json());
     }
