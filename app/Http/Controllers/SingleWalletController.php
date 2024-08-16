@@ -15,14 +15,14 @@ class singleWalletController extends Controller
      * 查詢訂單(限定時間區間五分鐘、並要指定玩家)
      * @return json 將回應查詢到的注單中所有請求
      */
-    public function queryOrder(Request $request)
+    public function checkOrder(Request $request)
     {
     }
 
     /**
      * 
      */
-    public function resendOrder(Request $request)
+    public function resendTransaction(Request $request)
     {
         $validatedData = $request->validate([
             'order_id' => 'required|exists:orders,id',
