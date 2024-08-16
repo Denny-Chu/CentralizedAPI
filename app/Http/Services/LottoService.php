@@ -36,9 +36,8 @@ class LottoService extends Service
     public static function getLottoHash($params)
     {
         $agentId = $params['agentId'] ?? "";
-        $memId = $params['memId'] ?? "";
         $apiKey = $params['api_key'] ?? "";
-        $md5Hash = md5($agentId . $memId . $apiKey);
+        $md5Hash = md5($agentId . $apiKey);
         $encryptedString = hash('sha256', $md5Hash);
 
         return $encryptedString;
