@@ -2,6 +2,8 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
+// 不分類區
+
 $router->group(['prefix' => 'auth'], function () use ($router) {
     $router->get('/demoLogin', 'AuthController@demoLogin');
     $router->get('/login', 'AuthController@login');
@@ -20,34 +22,31 @@ $router->group(['prefix' => 'player'], function () use ($router) {
     $router->get('/online', 'PlayerController@onlinePlayersList');
 });
 
-// $router->group(['prefix' => 'transaction'], function () use ($router) {
-//     $router->post('/transfer', 'TransactionController@transfer');
-//     $router->get('/history', 'TransactionController@getTransferHistory');
-// });
-
 $router->group(['prefix' => 'game'], function () use ($router) {
     $router->get('/history', 'GameController@getTransactionHistory');
     $router->get('/detail', 'GameController@getOrderDetail');
     $router->get('/detailUrl', 'GameController@getDetailUrl');
+});
 
-    $router->group(['namespace' => 'bingo'], function () use ($router) {
-        $router->group(['prefix' => 'jackpot'], function () use ($router) {
-            $router->get('/getGameJackpot', 'jackpotController@getGameJackpot');
-            $router->get('/getJackpotPlayers', 'jackpotController@getJackpotPlayers');
-        });
+// 目前只有bingo有jackpot跟event的額外設置
+$router->group(['namespace' => 'Bingo'], function () use ($router) {
+    $router->group(['prefix' => 'jackpot'], function () use ($router) {
+        $router->get('/getGameJackpot', 'jackpotController@getGameJackpot');
+        $router->get('/getJackpotPlayers', 'jackpotController@getJackpotPlayers');
+    });
 
-        $router->group(['prefix' => 'event'], function () use ($router) {
-            $router->post('/registerEvent', 'eventController@registerEvent');
-            $router->get('/getJackpotPlayers', 'eventController@getJackpotPlayers');
-        });
+    $router->group(['prefix' => 'event'], function () use ($router) {
+        $router->post('/registerEvent', 'eventController@registerEvent');
     });
 });
 
+// 單一錢包專屬
 $router->group(['prefix' => 'sw'], function () use ($router) {
     $router->get('/checkOrder', 'singleWalletController@checkOrder');
     $router->get('/resendTransaction', 'singleWalletController@resendTransaction');
 });
 
+// 轉帳錢包專屬
 $router->group(['prefix' => 'tw'], function () use ($router) {
     $router->post('/getMoney', 'transferWalletController@getMoney');
     $router->post('/transfer', 'transferWalletController@transfer');

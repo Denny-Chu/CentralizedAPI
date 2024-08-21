@@ -3,13 +3,11 @@
 namespace app\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request;
 
 class singleWalletController extends Controller
 {
-    protected function __construct()
-    {
-    }
+    protected function __construct() {}
 
     /**
      * 查詢訂單(限定時間區間五分鐘、並要指定玩家)
@@ -17,6 +15,13 @@ class singleWalletController extends Controller
      */
     public function checkOrder(Request $request)
     {
+        $params = $request->all();
+        $header['authorization'] = $request->header('authorization');
+        $game = $params['game'];
+
+        $platform = $params['platform'];
+        $hash = hash("SHA256", json_encode($params));
+        $response = Http::withHeaders($header)->post(env(strtoupper($game) . '_SINGLEWALLET_API_URL') . "/$platform/transfer?hash=$hash", $params);
     }
 
     /**
@@ -27,7 +32,14 @@ class singleWalletController extends Controller
         $validatedData = $request->validate([
             'order_id' => 'required|exists:orders,id',
         ]);
-    
+
         $orderId = $validatedData['order_id'];
     }
+
+    public function auth(Request $request) {}
+    public function balance(Request $request) {}
+    public function bet(Request $request) {}
+    public function cancelBet(Request $request) {}
+    public function logout(Request $request) {}
+    
 }
