@@ -3,7 +3,8 @@
 namespace app\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Request;
 
 class singleWalletController extends Controller
 {
@@ -36,10 +37,25 @@ class singleWalletController extends Controller
         $orderId = $validatedData['order_id'];
     }
 
-    public function auth(Request $request) {}
-    public function balance(Request $request) {}
-    public function bet(Request $request) {}
-    public function cancelBet(Request $request) {}
-    public function logout(Request $request) {}
+    public function auth(Request $request)
+    {
+        //
+    }
+    public function balance(Request $request)
+    {
+        //
+    }
+    public function bet(Request $request)
+    {
+        //
+    }
+    public function cancelBet(Request $request)
+    {
+        //
+    }
+    public function logout(Request $request)
+    {
+        //
+    }
     
 }

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Services\CommonService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
@@ -12,13 +13,15 @@ use App\Models\ResponseRecord;
 
 class SingleWalletService
 {
-    public function handleRequest(Request $request, $gameType)
+    public $platform;
+
+    public function handleRequest(Request $request, $method)
     {
         // 生成 UUID
         $uuid = Str::uuid();
 
         // 儲存請求記錄
-        $swrr = $this->saveRequestRecord($request, $uuid, $gameType);
+        $swrr = $this->saveRequestRecord($request, $uuid, $method);
 
         // 儲存請求標頭
         $this->saveRequestHeaders($request, $swrr->id);
@@ -27,7 +30,7 @@ class SingleWalletService
         $this->saveRequestBody($request, $swrr->id);
 
         // 轉發請求到目標 API
-        $response = $this->forwardRequest($request);
+        $response = $this->forwardRequest($request, $method);
 
         // 儲存響應記錄
         $this->saveResponseRecord($response, $swrr->id);
@@ -35,11 +38,11 @@ class SingleWalletService
         return $response;
     }
 
-    private function saveRequestRecord(Request $request, $uuid, $gameType)
+    private function saveRequestRecord(Request $request, $uuid, $method)
     {
         return SingleWalletRequestRecord::create([
             'uuid' => $uuid,
-            'game_type' => $gameType,
+            'method' => $method,
             'full_request' => json_encode($request->all()),
             'request_method' => $request->method(),
             'request_url' => $request->fullUrl(),
@@ -68,10 +71,12 @@ class SingleWalletService
         }
     }
 
-    private function forwardRequest(Request $request)
+    private function forwardRequest(Request $request, $gameMethod)
     {
-        $targetUrl = config('api.target_url'); // 從配置文件獲取目標 API URL
-        
+        $targetUrl = CommonService::getCallBackUrl($request->input('cagent_uid'), $this->platform, $gameMethod);
+
+        dd($targetUrl);
+
         $method = strtolower($request->method());
         $options = [
             'headers' => $request->headers->all(),

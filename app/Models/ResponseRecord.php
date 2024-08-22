@@ -2,19 +2,26 @@
 
 namespace App\Models;
 
-use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Lumen\Auth\Authorizable;
 
 class ResponseRecord extends Model
 {
+    use HasFactory;
 
     protected $fillable = [
-        'name', 'email',
+        'swrr_id',
+        'status_code',
+        'headers',
+        'body',
     ];
-    
-    protected $hidden = [
-        'password',
+
+    protected $casts = [
+        'headers' => 'array',
     ];
+
+    public function requestRecord()
+    {
+        return $this->belongsTo(SingleWalletRequestRecord::class, 'swrr_id');
+    }
 }

@@ -34,13 +34,4 @@ class TransactionController extends Controller
 
         return response()->json($response->json());
     }
-
-    public function getTransferHistory(Request $request)
-    {
-        $params = $request->all();
-        $header['authorization'] = $request->header('authorization');
-        $response = CommonService::getUrlResponse($header, $params, "history/transfer", "get");
-
-        return response()->json($response->json());
-    }
 }

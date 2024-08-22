@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 // Service
 use App\Http\Services\LottoService;
+use App\Models\SingleWalletSet;
 
 class CommonService extends Service
 {
@@ -43,5 +44,14 @@ class CommonService extends Service
         }
 
         return $response;
+    }
+
+    public static function getCallBackUrl($cagentUid, $platform, $method)
+    {
+        $url = '';
+
+        $url = SingleWalletSet::where(['cagent_uid' => $cagentUid, 'platform' => $platform, 'method' => $method])->first()->pluck('callback_url');
+
+        return $url;
     }
 }
