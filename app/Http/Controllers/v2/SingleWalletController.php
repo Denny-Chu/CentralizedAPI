@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\v2\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 
-class singleWalletController extends Controller
+class SingleWalletController extends Controller
 {
     protected function __construct() {}
 
@@ -22,7 +21,7 @@ class singleWalletController extends Controller
 
         $platform = $params['platform'];
         $hash = hash("SHA256", json_encode($params));
-        $response = Http::withHeaders($header)->post(env(strtoupper($game) . '_SINGLEWALLET_API_URL') . "/$platform/transfer?hash=$hash", $params);
+        $response = Http::withHeaders($header)->post(env(strtoupper($game) . '_V2_API_URL') . "/$platform/transfer?hash=$hash", $params);
     }
 
     /**

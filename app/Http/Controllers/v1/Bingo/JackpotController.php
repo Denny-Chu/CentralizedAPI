@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Bingo\Controllers;
+namespace App\Http\v1\Bingo\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Http\v1\Controllers\Controller;
 
 class JackpotController extends Controller
 {

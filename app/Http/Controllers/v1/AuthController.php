@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\v1\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Services\CommonService;
+use App\Models\MemberInfo;
 use Illuminate\Support\Facades\Http;
 
 class AuthController extends Controller
@@ -23,6 +24,13 @@ class AuthController extends Controller
         $params = $request->all();
         $header['authorization'] = $request->header('authorization');
         $response = CommonService::getUrlResponse($header, $params, "login", "get");
+
+        if ($response->ok()) {
+            $url = $response->object()->data->Url;
+            $fakeRequest = Request::create($url);
+            $queryParams = $fakeRequest->query();
+            MemberInfo::where('memId', $queryParams['username'])->update(['passwd' => $queryParams['token']]);
+        }
 
         return response()->json($response->json());
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\v2\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Services\CommonService;
@@ -20,7 +20,7 @@ class GameController extends Controller
     {
         $params = $request->all();
         $header['authorization'] = $request->header('authorization');
-        $response = CommonService::getUrlResponse($header, $params, "history/transaction", "get");
+        $response = CommonService::getUrlResponse($header, $params, "history/transaction", "get", true);
 
         return response()->json($response->json());
     }
@@ -29,7 +29,7 @@ class GameController extends Controller
     {
         $params = $request->all();
         $header['authorization'] = $request->header('authorization');
-        $response = CommonService::getUrlResponse($header, $params, "history/detail/order", "get");
+        $response = CommonService::getUrlResponse($header, $params, "history/detail/order", "get", true);
 
 
         return response()->json($response->json());
@@ -39,7 +39,7 @@ class GameController extends Controller
     {
         $params = $request->all();
         $header['authorization'] = $request->header('authorization');
-        $response = CommonService::getUrlResponse($header, $params, "history/detail/url", "get");
+        $response = CommonService::getUrlResponse($header, $params, "history/detail/url", "get", true);
 
         return response()->json($response->json());
     }

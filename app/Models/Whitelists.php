@@ -12,7 +12,7 @@ class Whitelists extends Model
 
     protected $hidden = ['last_editor'];
 
-    protected $table = 'white_lists';
+    protected $table = 'whitelists';
 
     protected $fillable = ['ip_address', 'cagent_uid', 'description', 'is_active', 'last_editor'];
 

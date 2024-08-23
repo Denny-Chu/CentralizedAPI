@@ -12,7 +12,7 @@ class WhitelistMiddleware
     public function handle(Request $request, Closure $next)
     {
         $apiKey = $request->header('Authorization');
-        $ip = $request->ip();
+        $ip = $this->getRealIpAddr();
 
         $cagent = Cagent::where('api_key', $apiKey)->first();
 
@@ -30,5 +30,29 @@ class WhitelistMiddleware
         }
 
         return $next($request);
+    }
+
+    protected function getRealIpAddr()
+    {
+        $headers = [
+            'HTTP_CLIENT_IP',
+            'HTTP_X_FORWARDED_FOR',
+            'HTTP_X_FORWARDED',
+            'HTTP_X_CLUSTER_CLIENT_IP',
+            'HTTP_FORWARDED_FOR',
+            'HTTP_FORWARDED',
+            'REMOTE_ADDR'
+        ];
+
+        foreach ($headers as $header) {
+            if (!empty($_SERVER[$header])) {
+                $ip = trim(explode(",", $_SERVER[$header])[0]);
+                if (filter_var($ip, FILTER_VALIDATE_IP)) {
+                    return $ip;
+                }
+            }
+        }
+
+        return request()->ip(); // 如果所有方法都失敗，回退到 Laravel 的方法
     }
 }

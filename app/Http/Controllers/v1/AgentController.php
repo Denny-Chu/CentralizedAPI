@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\v1\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Services\CommonService;

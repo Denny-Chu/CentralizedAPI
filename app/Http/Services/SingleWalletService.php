@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Http\Services;
 
 use App\Http\Services\CommonService;
 use Illuminate\Http\Request;
@@ -10,6 +10,10 @@ use App\Models\SingleWalletRequestRecord;
 use App\Models\RequestHeader;
 use App\Models\RequestBody;
 use App\Models\ResponseRecord;
+use App\Models\SingleWalletSet;
+use Exception;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 class SingleWalletService
 {
@@ -73,9 +77,10 @@ class SingleWalletService
 
     private function forwardRequest(Request $request, $gameMethod)
     {
-        $targetUrl = CommonService::getCallBackUrl($request->input('cagent_uid'), $this->platform, $gameMethod);
-
-        dd($targetUrl);
+        $targetUrl = $this->getCallBackUrl($request->input('cagent_model')->uid, $this->platform, $gameMethod);
+        if($targetUrl === null){
+            throw new Exception('Undefined merchant with invalid callback url');
+        }
 
         $method = strtolower($request->method());
         $options = [
@@ -94,5 +99,10 @@ class SingleWalletService
             'headers' => json_encode($response->headers()),
             'body' => $response->body(),
         ]);
+    }
+
+    public function getCallBackUrl($cagentUid, $platform, $method)
+    {
+        return SingleWalletSet::where(['cagent_uid' => $cagentUid, 'platform' => $platform, 'method' => $method])->first()->callback_url;
     }
 }

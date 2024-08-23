@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\v2\Controllers;
 
 use Laravel\Lumen\Routing\Controller as BaseController;
 

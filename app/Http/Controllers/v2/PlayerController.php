@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\v2\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Services\CommonService;
@@ -16,11 +16,11 @@ class PlayerController extends Controller
         // --------------------
         $game = $params['game'];
         if ($game === 'LOTTO') {
-            $response = CommonService::getUrlResponse($header, $params, "players", "post");
+            $response = CommonService::getUrlResponse($header, $params, "players", "post", true);
         } else {
             $platform = $params['platform'];
             $hash = hash("SHA256", json_encode($params));
-            $response = Http::withHeaders($header)->post(env(strtoupper($game) . '_API_URL') . "/$platform/players?hash=$hash", $params);
+            $response = Http::withHeaders($header)->post(env(strtoupper($game) . '_V2_API_URL') . "/$platform/players?hash=$hash", $params);
         }
 
         return response()->json($response->json());
@@ -30,7 +30,7 @@ class PlayerController extends Controller
     {
         $params = $request->all();
         $header['authorization'] = $request->header('authorization');
-        $response = CommonService::getUrlResponse($header, $params, "players/status", "get");
+        $response = CommonService::getUrlResponse($header, $params, "players/status", "get", true);
 
         return response()->json($response->json());
     }
@@ -39,7 +39,7 @@ class PlayerController extends Controller
     {
         $params = $request->all();
         $header['authorization'] = $request->header('authorization');
-        $response = CommonService::getUrlResponse($header, $params, "players/online", "get");
+        $response = CommonService::getUrlResponse($header, $params, "players/online", "get", true);
 
         return response()->json($response->json());
     }
