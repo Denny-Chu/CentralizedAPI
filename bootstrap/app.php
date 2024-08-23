@@ -108,6 +108,11 @@ $app->configure('app');
 |
 */
 
+$app->routeMiddleware([
+    'sw.user.auth' => App\Http\Middleware\SwAuthenticateMiddleware::class,
+    'whitelist' => App\Http\Middleware\WhitelistMiddleware::class,
+]);
+
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($router) {
@@ -120,12 +125,5 @@ $app->router->group([
 ], function ($router) {
     require __DIR__.'/../routes/api.php';
 });
-
-$app->routeMiddleware([
-    'sw.user.auth' => App\Http\Middleware\SwAuthenticateMiddleware::class,
-    'whitelist' => App\Http\Middleware\WhitelistMiddleware::class,
-]);
-
-$app->withEloquent();
 
 return $app;

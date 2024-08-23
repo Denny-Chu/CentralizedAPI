@@ -30,8 +30,6 @@ class SwAuthenticateMiddleware
             'username' => implode('_', array_slice($parts, 2)), // 原本username被用底線分割成多個參數，現在將第三個參數後的所有參數用底線連結回來組回名稱
             'cagent_model' => $cagent
         ]);
-        
-        
 
         return $next($request);
     }

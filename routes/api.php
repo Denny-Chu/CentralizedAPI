@@ -11,7 +11,6 @@ use app\Http\Controllers\singleWalletController;
 use app\Http\Controllers\TransferWalletController;
 use Illuminate\Support\Facades\Route;
 
-// 假設所有必要的控制器都已經在此處引入
 
 // 屬於商戶發送請求的區域，需驗證header以及IP白名單
 Route::group(['middleware' => ['whitelist']], function () {
