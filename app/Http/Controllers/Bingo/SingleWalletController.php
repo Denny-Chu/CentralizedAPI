@@ -1,8 +1,8 @@
 <?php
 
-namespace app\Http\Controllers\Bingo;
+namespace App\Http\Controllers\Bingo;
 
-use app\Http\Controllers\singleWalletController;
+use App\Http\Controllers\singleWalletController;
 use App\Services\SingleWalletService;
 use Illuminate\Http\Request;
 

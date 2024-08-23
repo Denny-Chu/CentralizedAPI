@@ -4,11 +4,11 @@ use App\Http\Bingo\Controllers\EventController;
 use App\Http\Bingo\Controllers\JackpotController;
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\AuthController;
-use app\Http\Controllers\Bingo\SwController;
+use App\Http\Controllers\Bingo\SwController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\PlayerController;
-use app\Http\Controllers\singleWalletController;
-use app\Http\Controllers\TransferWalletController;
+use App\Http\Controllers\singleWalletController;
+use App\Http\Controllers\TransferWalletController;
 use Illuminate\Support\Facades\Route;
 
 
