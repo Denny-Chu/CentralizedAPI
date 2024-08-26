@@ -62,6 +62,7 @@ $app->singleton(
 */
 
 $app->configure('app');
+$app->configure('logging');
 
 /*
 |--------------------------------------------------------------------------
@@ -82,6 +83,11 @@ $app->configure('app');
 //     'auth' => App\Http\Middleware\Authenticate::class,
 // ]);
 
+$app->routeMiddleware([
+    'sw.auth' => App\Http\Middleware\SwAuthenticateMiddleware::class,
+    'whitelist' => App\Http\Middleware\WhitelistMiddleware::class,
+]);
+
 /*
 |--------------------------------------------------------------------------
 | Register Service Providers
@@ -96,6 +102,7 @@ $app->configure('app');
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
+$app->register(App\Providers\LogServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -108,11 +115,6 @@ $app->configure('app');
 |
 */
 
-$app->routeMiddleware([
-    'sw.auth' => App\Http\Middleware\SwAuthenticateMiddleware::class,
-    'whitelist' => App\Http\Middleware\WhitelistMiddleware::class,
-]);
-
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($router) {
@@ -120,15 +122,15 @@ $app->router->group([
 });
 
 $app->router->group([
-    'namespace' => 'App\Http\controllers\v1',
+    'namespace' => 'App\Http\Controllers\v1',
     'prefix' => 'api',
 ], function ($router) {
     require __DIR__.'/../routes/tw.php';
 });
 
 $app->router->group([
-    'namespace' => 'App\Http\controllers\v2',
-    'prefix' => 'sw\api',
+    'namespace' => 'App\Http\Controllers\v2',
+    'prefix' => 'sw/api',
 ], function ($router) {
     require __DIR__.'/../routes/sw.php';
 });
