@@ -120,14 +120,14 @@ $app->router->group([
 });
 
 $app->router->group([
-    'namespace' => 'App\Http\v1',
-    'prefix' => 'tw\api',
+    'namespace' => 'App\Http\controllers\v1',
+    'prefix' => 'api',
 ], function ($router) {
     require __DIR__.'/../routes/tw.php';
 });
 
 $app->router->group([
-    'namespace' => 'App\Http\v2',
+    'namespace' => 'App\Http\controllers\v2',
     'prefix' => 'sw\api',
 ], function ($router) {
     require __DIR__.'/../routes/sw.php';

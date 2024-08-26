@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\v1\Bingo\Controllers;
+namespace App\Http\Controllers\v1\Bingo;
 
-use App\Http\v1\Controllers\Controller;
+use App\Http\Controllers\v1\Controller;
 
 class EventController extends Controller
 {
