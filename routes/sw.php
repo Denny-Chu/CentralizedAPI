@@ -2,11 +2,16 @@
 
 
 $router->group(['middleware' => ['whitelist']], function () use ($router) {
-    $router->get('/checkOrder', 'SingleWalletController@checkOrder');
-    $router->get('/resendTransaction', 'SingleWalletController@resendTransaction');
+    // $router->get('/checkOrder', 'SingleWalletController@checkOrder');
+    // $router->get('/resendTransaction', 'SingleWalletController@resendTransaction');
     $router->group(['middleware' => ['sw.auth']], function () use ($router) {
-        $router->get('/checkOrder', 'SingleWalletController@checkOrder');
-        $router->get('/resendTransaction', 'SingleWalletController@resendTransaction');
+        $router->group(['prefix' => 'auth'], function () use ($router) {
+            // $router->get('/demoLogin', 'AuthController@demoLogin');
+            $router->get('/login', 'AuthController@login');
+            // $router->post('/logout', 'AuthController@logout');
+            // $router->post('/logoutAll', 'AuthController@logoutAll');
+            // $router->post('/getMoney', 'AuthController@getMoney');
+        });
     });
 });
 
