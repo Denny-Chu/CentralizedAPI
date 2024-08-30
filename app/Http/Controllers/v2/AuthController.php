@@ -22,8 +22,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $params = $request->all();
-        $header['authorization'] = $request->header('authorization');
-        $response = CommonService::getUrlResponse($header, $params, "login", "get");
+        $response = CommonService::swGetUrlResponse($request->header('authorization'), $params, "login", "get");
 
         if ($response->ok()) {
             $url = $response->object()->data->Url;

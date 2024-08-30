@@ -51,6 +51,25 @@ class CommonService extends Service
         return $response;
     }
 
+    /**
+     * 轉接api後取得回應
+     */
+    public static function swGetUrlResponse($api_key, $params, $route, $method)
+    {
+        $game = $params['game'];
+        $platform = $params['platform'];
+
+        switch ($game) {
+            default:
+                $hash = CommonService::hashGenerator($params, $api_key);
+                $url = env(strtoupper($game) . '_V2_API_URL') . "/{$platform}/{$route}?hash={$hash}";
+                $response = Http::$method($url, $params);
+                break;
+        }
+
+        return $response;
+    }
+
     public static function parseUsername($username): array
     {
 
@@ -70,5 +89,10 @@ class CommonService extends Service
             'username' => implode('_', array_slice($parts, 2)), // 原本username被用底線分割成多個參數，現在將第三個參數後的所有參數用底線連結回來組回名稱
             'cagent_model' => $cagent
         ];
+    }
+
+    public static function hashGenerator(array $data = [], string $api_key): string
+    {
+        return hash_hmac('sha256', json_encode($data), $api_key);
     }
 }
