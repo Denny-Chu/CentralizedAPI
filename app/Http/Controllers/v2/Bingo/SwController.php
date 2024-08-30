@@ -29,10 +29,12 @@ class SwController extends SingleWalletController
                 $user = MemberInfo::where('passwd', $request->json('token'))->first();
                 $parseResult = CommonService::parseUsername($user->memId);
                 $request->merge([
-                    'cagent' => $parseResult['cagent'],
-                    'agent' => $parseResult['agent'],
                     'username' => $parseResult['username'],
-                    'cagent_model' => $parseResult['cagent_model'],
+                    'parseData' => [
+                        'cagent' => $parseResult['cagent'],
+                        'agent' => $parseResult['agent'],
+                        'cagent_model' => $parseResult['cagent_model'],
+                    ]
                 ]);
                 $this->singleWalletService->handleRequest($request, $functionName);
             });

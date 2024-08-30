@@ -47,7 +47,7 @@ class SingleWalletService
         return SingleWalletRequestRecord::create([
             'uuid' => $uuid,
             'method' => $method,
-            'full_request' => json_encode($request->all()),
+            'full_request' => json_encode($request->except('parseData')),
             'request_method' => $request->method(),
             'request_url' => $request->fullUrl(),
         ]);
@@ -66,7 +66,7 @@ class SingleWalletService
 
     private function saveRequestBody(Request $request, $swrrId)
     {
-        foreach ($request->all() as $key => $value) {
+        foreach ($request->except('parseData') as $key => $value) {
             RequestBody::create([
                 'swrr_id' => $swrrId,
                 'key' => $key,
@@ -77,11 +77,11 @@ class SingleWalletService
 
     private function forwardRequest(Request $request, $gameMethod)
     {
-        $targetUrl = $this->getCallBackUrl($request->input('cagent_model')->uid, $this->platform, $gameMethod);
-        if($targetUrl === null){
+        $targetUrl = $this->getCallBackUrl(request('parseData')['cagent_model']['uid'] ?? null, $this->platform, $gameMethod);
+        if ($targetUrl === null) {
             throw new Exception('Undefined merchant with invalid callback url');
         }
-
+        $request->forget('parseData');
         $method = strtolower($request->method());
         $options = [
             'headers' => $request->headers->all(),

@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
     dirname(__DIR__)
@@ -62,7 +62,6 @@ $app->singleton(
 */
 
 $app->configure('app');
-$app->configure('logging');
 
 /*
 |--------------------------------------------------------------------------
@@ -84,6 +83,7 @@ $app->configure('logging');
 // ]);
 
 $app->routeMiddleware([
+    'sw.gameAuth' => App\Http\Middleware\SwGameMiddleware::class,
     'sw.auth' => App\Http\Middleware\SwAuthenticateMiddleware::class,
     'whitelist' => App\Http\Middleware\WhitelistMiddleware::class,
 ]);
@@ -118,21 +118,21 @@ $app->register(App\Providers\LogServiceProvider::class);
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($router) {
-    require __DIR__.'/../routes/web.php';
+    require __DIR__ . '/../routes/web.php';
 });
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers\v1',
     'prefix' => 'api',
 ], function ($router) {
-    require __DIR__.'/../routes/tw.php';
+    require __DIR__ . '/../routes/tw.php';
 });
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers\v2',
     'prefix' => 'sw/api',
 ], function ($router) {
-    require __DIR__.'/../routes/sw.php';
+    require __DIR__ . '/../routes/sw.php';
 });
 
 return $app;

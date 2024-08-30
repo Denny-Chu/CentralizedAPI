@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
+use Monolog\Handler\RotatingFileHandler;
 use Monolog\Level;
 
 class LogServiceProvider extends ServiceProvider
@@ -12,23 +12,18 @@ class LogServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app->singleton('Psr\Log\LoggerInterface', function ($app) {
-            $logFile = storage_path('logs/lumen.log');
+            $logDir = storage_path('logs');
+            $filename = 'lumen.log';
+            $logFile = $logDir . '/' . $filename;
             $logLevel = $this->getLogLevel();
 
             // 確保日誌目錄存在
-            $logDir = dirname($logFile);
             if (!file_exists($logDir)) {
                 mkdir($logDir, 0775, true);
             }
 
-            // 如果日誌文件不存在，創建它並設置權限
-            if (!file_exists($logFile)) {
-                touch($logFile);
-                chmod($logFile, 0664);
-            }
-
             $logger = new Logger('lumen');
-            $handler = new StreamHandler($logFile, $logLevel);
+            $handler = new RotatingFileHandler($logFile, 0, $logLevel, true, 0664);
             $logger->pushHandler($handler);
 
             return $logger;
