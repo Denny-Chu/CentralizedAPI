@@ -23,8 +23,8 @@ class SwRequestMiddleware
         // 生成 UUID
         $uuid = Str::uuid();
 
-        // 從路由名稱中獲取方法名
-        $method = $request->route()->getName();
+        // 從路由中獲取方法名
+        $method = $this->getMethodFromRoute($request);
 
         // 保存請求記錄
         $swrr = $this->saveRequestRecord($request, $uuid, $method);
@@ -39,6 +39,15 @@ class SwRequestMiddleware
         $request->merge(['swrr_id' => $swrr->id]);
 
         return $next($request);
+    }
+
+    private function getMethodFromRoute(Request $request)
+    {
+        $route = $request->route();
+        if (is_array($route) && isset($route[1]['as'])) {
+            return $route[1]['as'];
+        }
+        return 'unknown';
     }
 
     private function saveRequestRecord(Request $request, $uuid, $method)
