@@ -16,13 +16,13 @@ $router->group(['middleware' => ['whitelist']], function () use ($router) {
 });
 
 // 單一錢包回調部分
-$router->group(['prefix' => 'callback'], function () use ($router) {
+$router->group(['prefix' => 'callback', 'middleware' => ['sw.request']], function () use ($router) {
     $router->group(['prefix' => 'bingo', 'namespace' => 'Bingo'], function () use ($router) {
-        $router->post('/auth', 'SwController@auth');
+        $router->post('/auth', ['as' => 'auth', 'uses' => 'SwController@auth']);
         $router->group(['middleware' => ['sw.gameAuth']], function () use ($router) {
-            $router->post('/balance', 'SwController@balance');
-            $router->post('/bet', 'SwController@bet');
-            $router->post('/cancelBet', 'SwController@cancelBet');
+            $router->post('/balance', ['as' => 'balance', 'uses' => 'SwController@balance']);
+            $router->post('/bet', ['as' => 'bet', 'uses' => 'SwController@bet']);
+            $router->post('/cancelBet', ['as' => 'cancelBet', 'uses' => 'SwController@cancelBet']);
         });
     });
 });

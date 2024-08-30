@@ -85,6 +85,7 @@ $app->configure('app');
 $app->routeMiddleware([
     'sw.gameAuth' => App\Http\Middleware\SwGameMiddleware::class,
     'sw.auth' => App\Http\Middleware\SwAuthenticateMiddleware::class,
+    'sw.request' => App\Http\Middleware\SwRequestMiddleware::class,
     'whitelist' => App\Http\Middleware\WhitelistMiddleware::class,
 ]);
 

@@ -54,15 +54,15 @@ class CommonService extends Service
     /**
      * 轉接api後取得回應
      */
-    public static function swGetUrlResponse($api_key, $params, $route, $method)
+    public static function swGetUrlResponse($request, $params, $route, $method)
     {
-        $game = $params['game'];
-        $platform = $params['platform'];
+        $game = $request->input('game');
+        ksort($params);
+        $params['Hash'] = CommonService::hashGenerator($params, $request->header('authorization'), $method);
 
         switch ($game) {
             default:
-                $hash = CommonService::hashGenerator($params, $api_key);
-                $url = env(strtoupper($game) . '_V2_API_URL') . "/{$platform}/{$route}?hash={$hash}";
+                $url = env(strtoupper($game) . '_V2_API_URL') . "/{$route}";
                 $response = Http::$method($url, $params);
                 break;
         }
@@ -91,8 +91,14 @@ class CommonService extends Service
         ];
     }
 
-    public static function hashGenerator(array $data = [], string $api_key): string
+    public static function hashGenerator(array $data, string $api_key, string $requestMethod): string
     {
-        return hash_hmac('sha256', json_encode($data), $api_key);
+        switch ($requestMethod) {
+            case 'get':
+                return hash_hmac('sha256', http_build_query($data), $api_key);
+            case 'post':
+            default:
+                return hash_hmac('sha256', json_encode($data), $api_key);
+        }
     }
 }

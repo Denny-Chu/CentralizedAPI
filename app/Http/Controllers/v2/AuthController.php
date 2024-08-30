@@ -21,14 +21,18 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $params = $request->all();
-        $response = CommonService::swGetUrlResponse($request->header('authorization'), $params, "login", "get");
+        $params = [
+            'username' => $request->input('username'),
+            'gameID' => $request->input('gameID', 'mega'),
+            'agentName' => $request->input('agentName'),
+            'lang' => $request->input('lang', 'en'),
+            'homeURL' => $request->input('homeURL'),
+            'token' => $request->input('token'),
+        ];
+        $response = CommonService::swGetUrlResponse($request, $params, "login", "get");
 
         if ($response->ok()) {
-            $url = $response->object()->data->Url;
-            $fakeRequest = Request::create($url);
-            $queryParams = $fakeRequest->query();
-            MemberInfo::where('memId', $queryParams['username'])->update(['passwd' => $queryParams['token']]);
+            MemberInfo::where('memId', $params['username'])->update(['passwd' => $request->input('token')]);
         }
 
         return response()->json($response->json());

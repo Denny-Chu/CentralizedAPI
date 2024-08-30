@@ -14,6 +14,7 @@ use App\Models\SingleWalletSet;
 use Exception;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\Console\Input\Input;
 
 class SingleWalletService
 {
@@ -21,58 +22,13 @@ class SingleWalletService
 
     public function handleRequest(Request $request, $method)
     {
-        // 生成 UUID
-        $uuid = Str::uuid();
-
-        // 儲存請求記錄
-        $swrr = $this->saveRequestRecord($request, $uuid, $method);
-
-        // 儲存請求標頭
-        $this->saveRequestHeaders($request, $swrr->id);
-
-        // 儲存請求內容
-        $this->saveRequestBody($request, $swrr->id);
-
         // 轉發請求到目標 API
         $response = $this->forwardRequest($request, $method);
 
         // 儲存響應記錄
-        $this->saveResponseRecord($response, $swrr->id);
+        $this->saveResponseRecord($response, $request->Input('swrr'));
 
         return $response;
-    }
-
-    private function saveRequestRecord(Request $request, $uuid, $method)
-    {
-        return SingleWalletRequestRecord::create([
-            'uuid' => $uuid,
-            'method' => $method,
-            'full_request' => json_encode($request->except('parseData')),
-            'request_method' => $request->method(),
-            'request_url' => $request->fullUrl(),
-        ]);
-    }
-
-    private function saveRequestHeaders(Request $request, $swrrId)
-    {
-        foreach ($request->headers->all() as $key => $value) {
-            RequestHeader::create([
-                'swrr_id' => $swrrId,
-                'key' => $key,
-                'value' => $value[0],
-            ]);
-        }
-    }
-
-    private function saveRequestBody(Request $request, $swrrId)
-    {
-        foreach ($request->except('parseData') as $key => $value) {
-            RequestBody::create([
-                'swrr_id' => $swrrId,
-                'key' => $key,
-                'value' => is_array($value) ? json_encode($value) : $value,
-            ]);
-        }
     }
 
     private function forwardRequest(Request $request, $gameMethod)
@@ -81,13 +37,14 @@ class SingleWalletService
         if ($targetUrl === null) {
             throw new Exception('Undefined merchant with invalid callback url');
         }
-        $request->forget('parseData');
+        $clone = clone $request;
+        unset($clone['parseData']);
         $method = strtolower($request->method());
         $options = [
             'headers' => $request->headers->all(),
-            'body' => $request->getContent(),
+            'body' => $clone->getContent(),
         ];
-
+DB::commit();
         return Http::withOptions($options)->$method($targetUrl);
     }
 
