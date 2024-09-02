@@ -14,6 +14,7 @@ use App\Models\SingleWalletSet;
 use Exception;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use PDO;
 use Symfony\Component\Console\Input\Input;
 
 class SingleWalletService
@@ -23,12 +24,31 @@ class SingleWalletService
     public function handleRequest(Request $request, $method)
     {
         // 轉發請求到目標 API
-        $response = $this->forwardRequest($request, $method);
+        // $response = $this->forwardRequest($request, $method);
 
         // 儲存響應記錄
-        $this->saveResponseRecord($response, $request->Input('swrr'));
+        // $this->saveResponseRecord($response, $request->Input('swrr'));
 
-        return $response;
+        // 測試用回應，先將資料順利跑一遍
+        switch ($method) {
+            case "auth":
+                $response = [
+                    'username' => '911_tgs_tgs208482',
+                    'currency' => 'PHP',
+                    'balance' => '99999999',
+                ];
+                break;
+            case "balance":
+            case "bet":
+            case "cancelBet":
+            default:
+                $response = [
+                    'balance' => '99999999',
+                ];
+                break;
+        }
+
+        return response()->json($response);
     }
 
     private function forwardRequest(Request $request, $gameMethod)
@@ -44,7 +64,7 @@ class SingleWalletService
             'headers' => $request->headers->all(),
             'body' => $clone->getContent(),
         ];
-DB::commit();
+        DB::commit();
         return Http::withOptions($options)->$method($targetUrl);
     }
 
