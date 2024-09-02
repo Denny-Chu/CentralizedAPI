@@ -35,7 +35,7 @@ class SwController extends SingleWalletController
                         'cagent_model' => $parseResult['cagent_model'],
                     ]
                 ]);
-                $this->singleWalletService->handleRequest($request, $functionName);
+                return $this->singleWalletService->handleRequest($request, $functionName);
             });
         } catch (Exception $e) {
             Log::error($e->getMessage());
