@@ -2,20 +2,12 @@
 
 namespace App\Http\Services;
 
-use App\Http\Services\CommonService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
-use App\Models\SingleWalletRequestRecord;
-use App\Models\RequestHeader;
-use App\Models\RequestBody;
 use App\Models\ResponseRecord;
 use App\Models\SingleWalletSet;
 use Exception;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
-use PDO;
-use Symfony\Component\Console\Input\Input;
 
 class SingleWalletService
 {
