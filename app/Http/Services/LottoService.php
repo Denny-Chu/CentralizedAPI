@@ -5,6 +5,25 @@ namespace App\Http\Services;
 class LottoService extends Service
 {
     /**
+     * 越南彩Url params轉換
+     * - LOTTO 層級為 agent(platform) > operator(agent)
+     */
+    public static function transParams($params, $apiKey)
+    {
+        $agentId = $params['platform'];
+        $operatorId = $params['agentName'];
+        $memId = $params['username'];
+        // 調整Params
+        $params['agentId'] = $agentId;
+        $params['operatorId'] = $operatorId;
+        $params['memId'] = $memId;
+        $params['api_key'] = $apiKey;
+        $params['hash'] = self::getLottoHash($params);
+
+        return $params;
+    }
+
+    /**
      * 越南彩route轉換
      */
     public static function getLottoRoute($url)
@@ -35,7 +54,7 @@ class LottoService extends Service
      */
     public static function getLottoHash($params)
     {
-        $agentId = $params['agentId'] ?? "";
+        $agentId = $params['platform'] ?? "";
         $apiKey = $params['api_key'] ?? "";
         $md5Hash = md5($agentId . $apiKey);
         $encryptedString = hash('sha256', $md5Hash);

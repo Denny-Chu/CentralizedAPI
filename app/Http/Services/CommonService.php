@@ -34,8 +34,10 @@ class CommonService extends Service
 
         switch ($game) {
             case "LOTTO":
-                $route = LottoService::getLottoRoute($route); //轉換一下
-                $params['hash'] = LottoService::getLottoHash($params);
+                // 轉換params參數
+                $params = LottoService::transParams($params, $header['authorization']);
+                // 轉換route
+                $route = LottoService::getLottoRoute($route);
                 $response = Http::withHeaders($header)->$method(env(strtoupper($game) . '_API_URL') . "/$route", $params);
                 break;
             default:
