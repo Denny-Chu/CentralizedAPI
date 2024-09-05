@@ -18,7 +18,7 @@ class LottoService extends Service
         $params['operatorId'] = $operatorId;
         $params['memId'] = $memId;
         $params['api_key'] = $apiKey;
-        $params['hash'] = self::getLottoHash($params);
+        $params['hash'] = self::getLottoHash($agentId, $apiKey);
 
         return $params;
     }
@@ -52,10 +52,8 @@ class LottoService extends Service
     /**
      * 建立越南彩hash
      */
-    public static function getLottoHash($params)
+    public static function getLottoHash($agentId, $apiKey)
     {
-        $agentId = $params['platform'] ?? "";
-        $apiKey = $params['api_key'] ?? "";
         $md5Hash = md5($agentId . $apiKey);
         $encryptedString = hash('sha256', $md5Hash);
 
