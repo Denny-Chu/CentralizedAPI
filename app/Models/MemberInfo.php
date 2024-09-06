@@ -31,6 +31,7 @@ class MemberInfo extends Model
         'name',
         'passwd',
         'cagent_uid',
+        'currency_code',
     ];
 
 }
