@@ -65,11 +65,8 @@ class CommonService extends Service
         switch ($game) {
             default:
                 $url = env(strtoupper($game) . '_V2_API_URL') . "/{$route}";
-                $response = Http::$method($url, $params);
-                break;
+                return Http::$method($url, $params);
         }
-
-        return $response;
     }
 
     public static function parseUsername($username): array
