@@ -14,7 +14,7 @@ class WhitelistMiddleware
         $apiKey = $request->header('Authorization');
         $ip = $this->getRealIpAddr();
 
-        $cagent = Cagent::where('api_key', $apiKey)->first();
+        $cagent = Cagent::orWhere('api_key_tw', $apiKey)->orWhere('api_key_sw', $apiKey)->first();
 
         if (!$cagent) {
             return response()->json(['error' => 'Invalid API key'], 401);
