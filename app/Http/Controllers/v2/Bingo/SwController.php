@@ -26,7 +26,8 @@ class SwController extends SingleWalletController
         try {
             $functionName = __FUNCTION__;
             return DB::transaction(function () use ($request, $functionName) {
-                $user = MemberInfo::where('passwd', $request->json('token'))->first();
+                $user = MemberInfo::where('passwd', $request->input('token'))->first();
+
                 $parseResult = CommonService::parseUsername($user->memId);
                 $request->merge([
                     'parseData' => [
@@ -35,7 +36,7 @@ class SwController extends SingleWalletController
                         'cagent_model' => $parseResult['cagent_model'],
                     ]
                 ]);
-                return $this->singleWalletService->handleRequest($request, $functionName);
+                return $this->singleWalletService->handleRequest($request, $functionName, $user->memId);
             });
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -48,7 +49,7 @@ class SwController extends SingleWalletController
         try {
             $functionName = __FUNCTION__;
             return DB::transaction(function () use ($request, $functionName) {
-                return $this->singleWalletService->handleRequest($request, $functionName);
+                return $this->singleWalletService->handleRequest($request, $functionName, $request->username);
             });
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -61,7 +62,7 @@ class SwController extends SingleWalletController
         try {
             $functionName = __FUNCTION__;
             return DB::transaction(function () use ($request, $functionName) {
-                return $this->singleWalletService->handleRequest($request, $functionName);
+                return $this->singleWalletService->handleRequest($request, $functionName, $request->username);
             });
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -74,7 +75,7 @@ class SwController extends SingleWalletController
         try {
             $functionName = __FUNCTION__;
             return DB::transaction(function () use ($request, $functionName) {
-                return $this->singleWalletService->handleRequest($request, $functionName);
+                return $this->singleWalletService->handleRequest($request, $functionName, $request->username);
             });
         } catch (Exception $e) {
             Log::error($e->getMessage());

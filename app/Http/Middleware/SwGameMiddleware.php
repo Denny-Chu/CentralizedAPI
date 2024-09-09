@@ -24,6 +24,9 @@ class SwGameMiddleware
                 'cagent_model' => $result['cagent_model'],
             ]
         ]);
+                
+        $app = app();
+        $app->instance('username', $request->input('username'));
 
         return $next($request);
     }

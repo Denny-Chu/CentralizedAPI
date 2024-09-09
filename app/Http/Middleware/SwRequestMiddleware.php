@@ -38,6 +38,9 @@ class SwRequestMiddleware
         // 將 swrr_id 添加到請求中，以便後續使用
         $request->merge(['swrr_id' => $swrr->id]);
 
+        $app = app();
+        $app->instance('swrr_id', $swrr->id);
+
         return $next($request);
     }
 

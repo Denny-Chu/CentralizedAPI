@@ -2,16 +2,10 @@
 
 
 $router->group(['middleware' => ['whitelist']], function () use ($router) {
-    // $router->get('/checkOrder', 'SingleWalletController@checkOrder');
-    // $router->get('/resendTransaction', 'SingleWalletController@resendTransaction');
+    $router->post('/agents', 'SingleWalletController@agents');
     $router->group(['middleware' => ['sw.auth']], function () use ($router) {
-        $router->group(['prefix' => 'auth'], function () use ($router) {
-            // $router->get('/demoLogin', 'AuthController@demoLogin');
-            $router->get('/login', 'AuthController@login');
-            // $router->post('/logout', 'AuthController@logout');
-            // $router->post('/logoutAll', 'AuthController@logoutAll');
-            // $router->post('/getMoney', 'AuthController@getMoney');
-        });
+            $router->get('/login', 'SingleWalletController@login');
+            $router->post('/logout', 'SingleWalletController@logout');
     });
 });
 
