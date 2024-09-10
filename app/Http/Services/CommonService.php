@@ -56,16 +56,15 @@ class CommonService extends Service
     /**
      * 轉接api後取得回應
      */
-    public static function swGetUrlResponse($request, $params, $route, $method)
+    public static function swGetUrlResponse($header, $params, $route, $method)
     {
-        $game = $request->input('game');
         ksort($params);
-        $params['Hash'] = CommonService::hashGenerator($params, $request->header('authorization'), $method);
+        $hash = CommonService::hashGenerator($params, $header['authorization'], $method);
 
-        switch ($game) {
+        switch ($params['game']) {
             default:
-                $url = env(strtoupper($game) . '_V2_API_URL') . "/{$route}";
-                return Http::$method($url, $params);
+                $url = env(strtoupper($params['game']) . '_V2_API_URL') . "/{$route}";
+                return Http::$method("{$url}?hash=$hash", $params);
         }
     }
 
