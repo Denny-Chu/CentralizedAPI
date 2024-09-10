@@ -38,6 +38,8 @@ class LottoService extends Service
             // player
             'players' => 'siginUp', // 建立玩家
             'players/status' => 'member-status', // 玩家狀態
+            'players/getMoney' => 'member-wallet', //玩家餘額
+
             // transaction
             'transfer' => 'transfer', // 轉帳
             'history/transfer' => 'report/player-transfer', // 轉帳紀錄

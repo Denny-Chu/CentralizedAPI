@@ -26,7 +26,7 @@ class WhitelistMiddleware
             ->first();
 
         if (!$whitelist) {
-            return response()->json(['error' => 'IP not whitelisted'], 403);
+            return response()->json(['error' => $cagent->uid . ' IP not whitelisted:' . $ip], 403);
         }
 
         return $next($request);
