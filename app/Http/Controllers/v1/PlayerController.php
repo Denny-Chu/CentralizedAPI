@@ -60,4 +60,21 @@ class PlayerController extends Controller
 
         return response()->json($response->json());
     }
+
+    public function getMoney(Request $request)
+    {
+        $params = $request->all();
+        $header['authorization'] = $request->header('authorization');
+        $game = $params['game'];
+
+        if ($game === "LOTTO") {
+            $response = CommonService::getUrlResponse($header, $params, "players/getMoney", "get");
+        } else {
+            $platform = $params['platform'];
+            $hash = hash("SHA256", json_encode($params));
+            $response = Http::withHeaders($header)->post(env(strtoupper($game) . '_API_URL') . "/$platform/players/getMoney?hash=$hash", $params);
+        }
+
+        return response()->json($response->json());
+    }
 }

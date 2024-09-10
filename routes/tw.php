@@ -13,7 +13,6 @@ $router->group(['middleware' => ['whitelist']], function () use ($router) {
         $router->get('/login', 'AuthController@login');
         $router->post('/logout', 'AuthController@logout');
         $router->post('/logoutAll', 'AuthController@logoutAll');
-        $router->post('/getMoney', 'AuthController@getMoney');
     });
 
     $router->group(['prefix' => 'agent'], function () use ($router) {
@@ -26,6 +25,7 @@ $router->group(['middleware' => ['whitelist']], function () use ($router) {
         $router->get('/status', 'PlayerController@playerStatus');
         $router->get('/online', 'PlayerController@onlinePlayersList');
         $router->post('/transfer', 'PlayerController@transfer');
+        $router->get('/getMoney', 'PlayerController@getMoney');
     });
 
     $router->group(['prefix' => 'game'], function () use ($router) {
