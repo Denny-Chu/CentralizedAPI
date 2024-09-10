@@ -10,9 +10,9 @@ class LottoService extends Service
      */
     public static function transParams($params, $apiKey)
     {
-        $agentId = $params['platform'];
-        $operatorId = $params['agentName'];
-        $memId = $params['username'];
+        $agentId = isset($params['platform']) ? $params['platform'] : '';
+        $operatorId = isset($params['agentName']) ? $params['agentName'] : '';
+        $memId = isset($params['username']) ? $params['username'] : '';
         // 調整Params
         $params['agentId'] = $agentId;
         $params['operatorId'] = $operatorId;
