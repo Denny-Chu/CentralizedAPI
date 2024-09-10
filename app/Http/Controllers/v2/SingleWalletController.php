@@ -98,7 +98,10 @@ class SingleWalletController extends Controller
     {
         $params = $request->all();
         $header['authorization'] = $request->header('authorization');
-        return CommonService::swGetUrlResponse($request, $params, "agents", "post");
+        
+        $response = CommonService::swGetUrlResponse($request, $params, "agents", "get");
+
+        return response()->json($response->json());
     }
 
     public function auth(Request $request)

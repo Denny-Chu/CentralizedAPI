@@ -60,11 +60,12 @@ class CommonService extends Service
     {
         ksort($params);
         $hash = CommonService::hashGenerator($params, $request->header('authorization'), $method);
+        $params['hash'] = $hash;
 
-        switch ($params['game']) {
+        switch ($request->input('game')) {
             default:
-                $url = env(strtoupper($params['game']) . '_V2_API_URL') . "/{$route}";
-                return Http::$method("{$url}?hash=$hash", $params);
+                $url = env(strtoupper($request->input('game')) . '_V2_API_URL') . "/{$route}";
+                return Http::$method($url, $params);
         }
     }
 

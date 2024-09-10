@@ -2,7 +2,7 @@
 
 
 $router->group(['middleware' => ['whitelist']], function () use ($router) {
-    $router->post('/agents', 'SingleWalletController@agents');
+    $router->get('/agents', 'SingleWalletController@agents');
     $router->group(['middleware' => ['sw.auth']], function () use ($router) {
             $router->get('/login', 'SingleWalletController@login');
             $router->post('/logout', 'SingleWalletController@logout');
