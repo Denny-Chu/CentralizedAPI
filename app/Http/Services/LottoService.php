@@ -13,11 +13,13 @@ class LottoService extends Service
         $agentId = isset($params['platform']) ? $params['platform'] : '';
         $operatorId = isset($params['agentName']) ? $params['agentName'] : '';
         $memId = isset($params['username']) ? $params['username'] : '';
+        $money = isset($params['amount']) ? $params['amount'] : '';
         // 調整Params
         $params['agentId'] = $agentId;
         $params['operatorId'] = $operatorId;
         $params['memId'] = $memId;
         $params['api_key'] = $apiKey;
+        $params['money'] = $money;
         $params['hash'] = self::getLottoHash($agentId, $apiKey);
 
         return $params;
