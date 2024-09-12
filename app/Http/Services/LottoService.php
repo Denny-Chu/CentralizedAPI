@@ -35,8 +35,8 @@ class LottoService extends Service
             'login' => 'login', // 玩家登入
             'logout' => 'logout-member', // 玩家登出
             'logout/all' => 'logout-all', // 玩家全體登出
-            // agent
-            'agents' => 'agent/create', // 創建代理
+            // Merchant&agent
+            'agents' => 'operator', // 創建代理
             // player
             'players' => 'siginUp', // 建立玩家
             'players/status' => 'member-status', // 玩家狀態
