@@ -34,7 +34,9 @@ $router->group(['middleware' => ['whitelist']], function () use ($router) {
         $router->get('/detailUrl', 'GameController@getDetailUrl');
     });
 
-    $router->get('/history', 'GameController@getTransferHistory');
+    $router->group(['prefix' => 'transaction'], function () use ($router) {
+        $router->get('/history', 'GameController@getTransferHistory');
+    });
 
     $router->group(['prefix' => 'event'], function () use ($router) {
         $router->post('/registerEvent', 'EventController@registerEvent');
