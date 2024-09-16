@@ -1,6 +1,6 @@
 <?php
 
-$router->group(['middleware' => ['whitelist']], function () use ($router) {
+$router->group(['middleware' => ['whitelist', 'walletTypeCheck.tw']], function () use ($router) {
     // 目前只有bingo有jackpot跟event的額外設置
     $router->group(['prefix' => 'jackpot', 'namespace' => 'Bingo'], function () use ($router) {
         $router->get('/getGameJackpot', 'Controllers\JackpotController@getGameJackpot');

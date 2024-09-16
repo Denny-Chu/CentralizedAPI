@@ -1,7 +1,7 @@
 <?php
 
 
-$router->group(['middleware' => ['whitelist']], function () use ($router) {
+$router->group(['middleware' => ['whitelist', 'walletTypeCheck.sw']], function () use ($router) {
     $router->get('/agents', 'SingleWalletController@agents');
     $router->group(['middleware' => ['sw.auth']], function () use ($router) {
             $router->get('/login', 'SingleWalletController@login');

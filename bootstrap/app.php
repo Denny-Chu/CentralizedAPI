@@ -87,6 +87,8 @@ $app->routeMiddleware([
     'sw.auth' => App\Http\Middleware\SwAuthenticateMiddleware::class,
     'sw.request' => App\Http\Middleware\SwRequestMiddleware::class,
     'whitelist' => App\Http\Middleware\WhitelistMiddleware::class,
+    'walletTypeCheck.tw' => App\Http\Middleware\IsTwWalletMiddleware::class,
+    'walletTypeCheck.sw' => App\Http\Middleware\IsSwWalletMiddleware::class,
 ]);
 
 /*
