@@ -10,14 +10,16 @@ class LottoService extends Service
      */
     public static function transParams($params, $apiKey)
     {
-        $agentId = $params['platform'];
-        $operatorId = $params['agentName'];
-        $memId = $params['username'];
+        $agentId = isset($params['platform']) ? $params['platform'] : '';
+        $operatorId = isset($params['agentName']) ? $params['agentName'] : '';
+        $memId = isset($params['username']) ? $params['username'] : '';
+        $money = isset($params['amount']) ? $params['amount'] : '';
         // 調整Params
         $params['agentId'] = $agentId;
         $params['operatorId'] = $operatorId;
         $params['memId'] = $memId;
         $params['api_key'] = $apiKey;
+        $params['money'] = $money;
         $params['hash'] = self::getLottoHash($agentId, $apiKey);
 
         return $params;
@@ -33,11 +35,13 @@ class LottoService extends Service
             'login' => 'login', // 玩家登入
             'logout' => 'logout-member', // 玩家登出
             'logout/all' => 'logout-all', // 玩家全體登出
-            // agent
-            'agents' => 'agent/create', // 創建代理
+            // Merchant&agent
+            'agents' => 'operator', // 創建代理
             // player
             'players' => 'siginUp', // 建立玩家
             'players/status' => 'member-status', // 玩家狀態
+            'players/getMoney' => 'member-wallet', //玩家餘額
+
             // transaction
             'transfer' => 'transfer', // 轉帳
             'history/transfer' => 'report/player-transfer', // 轉帳紀錄

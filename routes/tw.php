@@ -13,7 +13,6 @@ $router->group(['middleware' => ['whitelist', 'walletTypeCheck.tw']], function (
         $router->get('/login', 'AuthController@login');
         $router->post('/logout', 'AuthController@logout');
         $router->post('/logoutAll', 'AuthController@logoutAll');
-        $router->post('/getMoney', 'AuthController@getMoney');
     });
 
     $router->group(['prefix' => 'agent'], function () use ($router) {
@@ -26,6 +25,7 @@ $router->group(['middleware' => ['whitelist', 'walletTypeCheck.tw']], function (
         $router->get('/status', 'PlayerController@playerStatus');
         $router->get('/online', 'PlayerController@onlinePlayersList');
         $router->post('/transfer', 'PlayerController@transfer');
+        $router->get('/getMoney', 'PlayerController@getMoney');
     });
 
     $router->group(['prefix' => 'game'], function () use ($router) {
@@ -34,7 +34,9 @@ $router->group(['middleware' => ['whitelist', 'walletTypeCheck.tw']], function (
         $router->get('/detailUrl', 'GameController@getDetailUrl');
     });
 
-    $router->get('/history', 'GameController@getTransferHistory');
+    $router->group(['prefix' => 'transaction'], function () use ($router) {
+        $router->get('/history', 'GameController@getTransferHistory');
+    });
 
     $router->group(['prefix' => 'event'], function () use ($router) {
         $router->post('/registerEvent', 'EventController@registerEvent');

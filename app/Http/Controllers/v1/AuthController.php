@@ -23,13 +23,17 @@ class AuthController extends Controller
     {
         $params = $request->all();
         $header['authorization'] = $request->header('authorization');
+        $game = $params['game'];
         $response = CommonService::getUrlResponse($header, $params, "login", "get");
 
         if ($response->ok()) {
-            $url = $response->object()->data->Url;
-            $fakeRequest = Request::create($url);
-            $queryParams = $fakeRequest->query();
-            MemberInfo::where('memId', $queryParams['username'])->update(['passwd' => $queryParams['token']]);
+            if ($game === "LOTTO") {
+            } else {
+                $url = $response->object()->data->Url;
+                $fakeRequest = Request::create($url);
+                $queryParams = $fakeRequest->query();
+                MemberInfo::where('memId', $queryParams['username'])->update(['passwd' => $queryParams['token']]);
+            }
         }
 
         return response()->json($response->json());

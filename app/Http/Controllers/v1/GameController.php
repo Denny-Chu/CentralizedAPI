@@ -16,6 +16,7 @@ class GameController extends Controller
     {
     }
 
+    // 下注紀錄
     public function getTransactionHistory(Request $request)
     {
         $params = $request->all();
@@ -40,6 +41,16 @@ class GameController extends Controller
         $params = $request->all();
         $header['authorization'] = $request->header('authorization');
         $response = CommonService::getUrlResponse($header, $params, "history/detail/url", "get");
+
+        return response()->json($response->json());
+    }
+
+    // 轉帳紀錄
+    public function getTransferHistory(Request $request)
+    {
+        $params = $request->all();
+        $header['authorization'] = $request->header('authorization');
+        $response = CommonService::getUrlResponse($header, $params, "history/transfer", "get");
 
         return response()->json($response->json());
     }
