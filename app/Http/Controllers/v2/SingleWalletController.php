@@ -57,14 +57,18 @@ class SingleWalletController extends Controller
                 'token' => $request->input('token'),
             ];
 
-            $memberInfo = MemberInfo::where('memId', $params['username'])->first();
+            $memberInfo = MemberInfo::where([
+                'memId' => $params['username'],
+                'player_game_platform' => 'BINGO'
+            ])->first();
             if (empty($memberInfo)) {
                 $cagent = Cagent::where('api_key_sw', $request->header('authorization'))->first();
                 MemberInfo::create([
                     'cagent_uid' => $cagent->uid,
                     'memId' => $request->input('username'),
                     'passwd' => $request->input('token'),
-                    'currency_code' => $cagent->currency
+                    'currency_code' => $cagent->currency,
+                    'player_game_platform' => 'BINGO'
                 ]);
             } else {
                 $memberInfo->update(['passwd' => $request->input('token')]);
@@ -98,7 +102,7 @@ class SingleWalletController extends Controller
     {
         $params = $request->all();
         $header['authorization'] = $request->header('authorization');
-        
+
         $response = CommonService::swGetUrlResponse($request, $params, "agents", "get");
 
         return response()->json($response->json());
