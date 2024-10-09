@@ -32,6 +32,6 @@ class MemberInfo extends Model
         'passwd',
         'cagent_uid',
         'currency_code',
+        'player_game_platform'
     ];
-
 }
