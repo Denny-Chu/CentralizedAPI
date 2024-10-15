@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class SingleWalletController extends Controller
+class FXGSingleWalletController extends Controller
 {
     public function __construct() {}
 
@@ -48,29 +48,31 @@ class SingleWalletController extends Controller
     public function login(Request $request)
     {
         try {
+            //$token = "670ce0820f109";//uniqid(mt_srand((double)microtime() * 1000000));//"670cd1cee8d52";//
+            $token = $request->input('token');
             $params = [
-                'username' => $request->input('username'),
-                'gameID' => $request->input('gameID', 'mega'),
-                'agentName' => $request->input('agentName'),
-                'lang' => $request->input('lang', 'en'),
-                'homeURL' => $request->input('homeURL'),
-                'token' => $request->input('token'),
+                'Token' => $token,
+                'GameID' => $request->input('GameID'),
+                'AgentName' => env('FXG_SW_ANGENT'),
+                /* 'lang' => $request->input('lang', 'en'),
+                'homeURL' => $request->input('homeURL') */
             ];
 
-            $memberInfo = MemberInfo::where('memId', $params['username'])->first();
+            $memberInfo = MemberInfo::where('memId', $request->input('username'))->first();
             if (empty($memberInfo)) {
                 $cagent = Cagent::where('api_key_sw', $request->header('authorization'))->first();
                 MemberInfo::create([
                     'cagent_uid' => $cagent->uid,
                     'memId' => $request->input('username'),
-                    'passwd' => $request->input('token'),
+                    'passwd' => $token,
                     'currency_code' => $cagent->currency
                 ]);
             } else {
-                $memberInfo->update(['passwd' => $request->input('token')]);
+                $memberInfo->update(['passwd' => $token]);
             }
 
-            $response = CommonService::swGetUrlResponse($request, $params, "login", "get");
+            $response = CommonService::swGetUrlResponse4FxG($request, $params, "login", "get");
+            //var_dump($response);
 
             return response()->json($response->json());
         } catch (Exception $e) {
@@ -86,9 +88,26 @@ class SingleWalletController extends Controller
     {
         $params = $request->all();
 
-        $response = CommonService::swGetUrlResponse($request, $params, "logout", "post");
+        $response = CommonService::swGetUrlResponse4FxG($request, $params, "logout", "post");
 
         return response()->json($response->json());
+    }
+
+    public function games(Request $request)
+    {
+        try {
+            $params = [
+                'AgentName' => env('FXG_SW_ANGENT'),
+            ];
+
+            $response = CommonService::swGetUrlResponse4FxG($request, $params, "games", "get");
+            //var_dump($response);
+
+            return response()->json($response->json());
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(["ErrorCode" => 99]);
+        }
     }
 
     /**
@@ -99,12 +118,12 @@ class SingleWalletController extends Controller
         $params = $request->all();
         $header['authorization'] = $request->header('authorization');
 
-        $response = CommonService::swGetUrlResponse($request, $params, "agents", "get");
+        $response = CommonService::swGetUrlResponse4FxG($request, $params, "agents", "get");
 
         return response()->json($response->json());
     }
 
-    public function auth(Request $request)
+    /* public function auth(Request $request)
     {
         //
     }
@@ -119,5 +138,5 @@ class SingleWalletController extends Controller
     public function cancelBet(Request $request)
     {
         //
-    }
+    } */
 }

@@ -84,6 +84,7 @@ $app->configure('app');
 
 $app->routeMiddleware([
     'sw.gameAuth' => App\Http\Middleware\SwGameMiddleware::class,
+    'sw.FXGgameAuth' => App\Http\Middleware\FXGSwGameMiddleware::class,
     'sw.auth' => App\Http\Middleware\SwAuthenticateMiddleware::class,
     'sw.request' => App\Http\Middleware\SwRequestMiddleware::class,
     'whitelist' => App\Http\Middleware\WhitelistMiddleware::class,
@@ -136,6 +137,14 @@ $app->router->group([
     'prefix' => 'sw/api',
 ], function ($router) {
     require __DIR__ . '/../routes/sw.php';
+});
+
+//https://developers.91url.cc/fxg/sw/api
+$app->router->group([
+    'namespace' => 'App\Http\Controllers\v2',
+    'prefix' => 'fxg/sw/api',
+], function ($router) {
+    require __DIR__ . '/../routes/fxgsw.php';
 });
 
 return $app;

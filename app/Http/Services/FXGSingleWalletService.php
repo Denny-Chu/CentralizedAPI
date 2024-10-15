@@ -11,7 +11,7 @@ use Illuminate\Http\Client\Response as ClientResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
-class SingleWalletService
+class FXGSingleWalletService
 {
     public $platform;
 
@@ -58,7 +58,7 @@ class SingleWalletService
             })
             ->all();
 
-        return Http::withHeaders($headers)->$method("{$targetUrl}?hash={$request->input('hash')}", $clone->json()->all());
+        return Http::withHeaders($headers)->$method("{$targetUrl}?hash={$request->input('Hash')}", $clone->json()->all());
     }
 
     private function saveResponseRecord($response, $swrrId)
@@ -80,7 +80,7 @@ class SingleWalletService
     {
         $content = $response->json(); // 獲取 response 的 JSON 內容作為數組
         // 現在修改內容
-        $content = array_merge($content, ['username' => $fullUsername]);
+        $content = array_merge($content, ['Username' => $fullUsername]);
         // 創建一個新的 response 對象，包含修改後的內容
         return $content;
     }

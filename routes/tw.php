@@ -25,7 +25,7 @@ $router->group(['middleware' => ['whitelist', 'walletTypeCheck.tw']], function (
         $router->get('/status', 'PlayerController@playerStatus');
         $router->get('/online', 'PlayerController@onlinePlayersList');
         $router->post('/transfer', 'PlayerController@transfer');
-        $router->get('/getMoney', 'PlayerController@getMoney');
+        $router->post('/getMoney', 'PlayerController@getMoney');
     });
 
     $router->group(['prefix' => 'game'], function () use ($router) {

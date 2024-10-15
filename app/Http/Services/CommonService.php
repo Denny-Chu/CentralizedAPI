@@ -69,6 +69,16 @@ class CommonService extends Service
         }
     }
 
+    public static function swGetUrlResponse4FxG($request, $params, $route, $method)
+    {
+        ksort($params);
+        $hash = CommonService::hashGenerator($params, (string)env('FXG_SW_KEY'), $method);
+        $params['hash'] = $hash;
+
+        $url = env('FXG_SWAPI_URL')."/".env('FXG_SW_PLATFORM')."/{$route}";
+        return Http::$method($url, $params);
+    }
+
     public static function parseUsername($username): array
     {
 
