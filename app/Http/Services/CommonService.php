@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
 // Service
 use App\Http\Services\LottoService;
 use App\Models\Cagent;
@@ -69,13 +70,13 @@ class CommonService extends Service
         }
     }
 
-    public static function swGetUrlResponse4FxG($request, $params, $route, $method)
+    public static function swGetUrlResponse4FxG($request, $params, $route, $method, $api)
     {
         ksort($params);
-        $hash = CommonService::hashGenerator($params, (string)env('FXG_SW_KEY'), $method);
+        $hash = CommonService::hashGenerator($params, (string)$api->KEY, $method);
         $params['hash'] = $hash;
 
-        $url = env('FXG_SWAPI_URL')."/".env('FXG_SW_PLATFORM')."/{$route}";
+        $url = env('FXG_SWAPI_URL')."/".$api->PLATFORM."/{$route}";
         return Http::$method($url, $params);
     }
 

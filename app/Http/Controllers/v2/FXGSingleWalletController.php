@@ -49,18 +49,23 @@ class FXGSingleWalletController extends Controller
     {
         try {
             //$token = "670ce0820f109";//uniqid(mt_srand((double)microtime() * 1000000));//"670cd1cee8d52";//
+            //利用header找到代理的幣值，再去找fxg_apikey相關幣值的key
+            $cagent = Cagent::where('api_key_sw', $request->header('authorization'))->first();
+            $api = DB::table('fxg_apikey')
+                ->where(['CURR'=>$cagent->currency])
+                ->first();
+
             $token = $request->input('token');
             $params = [
                 'Token' => $token,
                 'GameID' => $request->input('GameID'),
-                'AgentName' => env('FXG_SW_ANGENT'),
+                'AgentName' => $api->ANGENT,
                 /* 'lang' => $request->input('lang', 'en'),
                 'homeURL' => $request->input('homeURL') */
             ];
 
             $memberInfo = MemberInfo::where('memId', $request->input('username'))->first();
             if (empty($memberInfo)) {
-                $cagent = Cagent::where('api_key_sw', $request->header('authorization'))->first();
                 MemberInfo::create([
                     'cagent_uid' => $cagent->uid,
                     'memId' => $request->input('username'),
@@ -71,7 +76,7 @@ class FXGSingleWalletController extends Controller
                 $memberInfo->update(['passwd' => $token]);
             }
 
-            $response = CommonService::swGetUrlResponse4FxG($request, $params, "login", "get");
+            $response = CommonService::swGetUrlResponse4FxG($request, $params, "login", "get", $api);
             //var_dump($response);
 
             return response()->json($response->json());
@@ -88,7 +93,13 @@ class FXGSingleWalletController extends Controller
     {
         $params = $request->all();
 
-        $response = CommonService::swGetUrlResponse4FxG($request, $params, "logout", "post");
+        //利用header找到代理的幣值，再去找fxg_apikey相關幣值的key
+        $cagent = Cagent::where('api_key_sw', $request->header('authorization'))->first();
+        $api = DB::table('fxg_apikey')
+                ->where(['CURR'=>$cagent->currency])
+                ->first();
+
+        $response = CommonService::swGetUrlResponse4FxG($request, $params, "logout", "post", $api);
 
         return response()->json($response->json());
     }
@@ -100,7 +111,13 @@ class FXGSingleWalletController extends Controller
                 'AgentName' => env('FXG_SW_ANGENT'),
             ];
 
-            $response = CommonService::swGetUrlResponse4FxG($request, $params, "games", "get");
+            //利用header找到代理的幣值，再去找fxg_apikey相關幣值的key
+            $cagent = Cagent::where('api_key_sw', $request->header('authorization'))->first();
+            $api = DB::table('fxg_apikey')
+                ->where(['CURR'=>$cagent->currency])
+                ->first();
+
+            $response = CommonService::swGetUrlResponse4FxG($request, $params, "games", "get", $api);
             //var_dump($response);
 
             return response()->json($response->json());
@@ -118,7 +135,13 @@ class FXGSingleWalletController extends Controller
         $params = $request->all();
         $header['authorization'] = $request->header('authorization');
 
-        $response = CommonService::swGetUrlResponse4FxG($request, $params, "agents", "get");
+        //利用header找到代理的幣值，再去找fxg_apikey相關幣值的key
+        $cagent = Cagent::where('api_key_sw', $request->header('authorization'))->first();
+        $api = DB::table('fxg_apikey')
+                ->where(['CURR'=>$cagent->currency])
+                ->first();
+
+        $response = CommonService::swGetUrlResponse4FxG($request, $params, "agents", "get", $api);
 
         return response()->json($response->json());
     }
