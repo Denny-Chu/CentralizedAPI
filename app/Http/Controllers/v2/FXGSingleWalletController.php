@@ -58,10 +58,10 @@ class FXGSingleWalletController extends Controller
             $token = $request->input('token');
             $params = [
                 'Token' => $token,
-                'GameID' => $request->input('GameID'),
+                'GameID' => $request->input('gameID'),
                 'AgentName' => $api->ANGENT,
-                /* 'lang' => $request->input('lang', 'en'),
-                'homeURL' => $request->input('homeURL') */
+                'lang' => $request->input('lang', 'en'),
+                'homeURL' => $request->input('homeURL')
             ];
 
             $memberInfo = MemberInfo::where('memId', $request->input('username'))->first();
